@@ -42,50 +42,141 @@ Você deverá executar o arquivo **Script Filmes.sql** em seu banco de dados SQL
 ## Objetivo
 Você deverá criar diversas consultas, com o objetivo de retornar os dados a seguir. Abaixo de cada pedido tem o retorno esperado. O seu retorno deve ser igual ao da imagem.
 
-## 1 - Buscar o nome e ano dos filmes
+## Minha Solução: 
 
-![Exercicio 1](Imagens/1.png)
+### 1. Buscar o nome e ano dos filmes:
 
-## 2 - Buscar o nome e ano dos filmes, ordenados por ordem crescente pelo ano
+Esta consulta seleciona as colunas Nome e Ano da tabela Filmes. O resultado será uma lista com o nome e ano de cada filme.
 
-![Exercicio 2](Imagens/2.png)
+```sql
+SELECT Nome, Ano FROM Filmes
+```
 
-## 3 - Buscar pelo filme de volta para o futuro, trazendo o nome, ano e a duração
+### 2. Buscar o nome e ano dos filmes, ordenados por ordem crescente pelo ano:
 
-![Exercicio 3](Imagens/3.png)
+Esta consulta seleciona as colunas Nome, Ano e Duracao da tabela Filmes. O resultado será uma lista com o nome, ano e duração de cada filme, ordenada por ano em ordem crescente.
 
-## 4 - Buscar os filmes lançados em 1997
+```sql
+SELECT Nome, Ano, Duracao FROM Filmes
+ORDER BY Ano ASC
+```
 
-![Exercicio 4](Imagens/4.png)
+### 3. Buscar pelo filme "De Volta para o Futuro", trazendo o nome, ano e a duração:
 
-## 5 - Buscar os filmes lançados APÓS o ano 2000
+Esta consulta usa o operador LIKE para buscar por filmes que contêm a string "De Volta para o Futuro" na coluna Nome. O resultado será uma lista com o nome, ano e duração do filme "De Volta para o Futuro".
 
-![Exercicio 5](Imagens/5.png)
+```sql
+SELECT Nome, Ano, Duracao FROM Filmes
+WHERE Nome LIKE '%De Volta para o Futuro%'
+```
 
-## 6 - Buscar os filmes com a duracao maior que 100 e menor que 150, ordenando pela duracao em ordem crescente
+### 4. Buscar os filmes lançados em 1997:
 
-![Exercicio 6](Imagens/6.png)
+Esta consulta usa o operador LIKE para buscar por filmes que contêm a string "1997" na coluna Ano. O resultado será uma lista com o nome, ano e duração dos filmes lançados em 1997.
 
-## 7 - Buscar a quantidade de filmes lançadas no ano, agrupando por ano, ordenando pela duracao em ordem decrescente
+```sql
+SELECT Nome, Ano, Duracao FROM Filmes
+WHERE Ano LIKE '%1997%'
+```
 
-![Exercicio 7](Imagens/7.png)
+### 5. Buscar os filmes lançados após o ano 2000:
 
-## 8 - Buscar os Atores do gênero masculino, retornando o PrimeiroNome, UltimoNome
+Esta consulta usa o operador > para buscar por filmes com valor na coluna Ano superior a 2000. O resultado será uma lista com o nome, ano e duração dos filmes lançados após o ano 2000.
 
-![Exercicio 8](Imagens/8.png)
+```sql
+SELECT 
+    Nome, 
+    Ano, 
+    Duracao
+FROM Filmes
+WHERE Ano > 2000
+```
 
-## 9 - Buscar os Atores do gênero feminino, retornando o PrimeiroNome, UltimoNome, e ordenando pelo PrimeiroNome
+### 6. Buscar os filmes com duração entre 100 e 150 minutos, ordenando pela duração em ordem crescente:
 
-![Exercicio 9](Imagens/9.png)
+Esta consulta usa os operadores > e < para buscar por filmes com valores na coluna Duracao entre 100 e 150. A consulta também ordena os resultados por Duracao em ordem crescente.
 
-## 10 - Buscar o nome do filme e o gênero
+```sql
+SELECT 
+    Nome, 
+    Ano, 
+    Duracao
+FROM Filmes
+WHERE Duracao > 100 AND Duracao < 150
+```
 
-![Exercicio 10](Imagens/10.png)
+### 7. Buscar a quantidade de filmes lançados por ano, agrupando por ano e ordenando pela quantidade em ordem decrescente:
 
-## 11 - Buscar o nome do filme e o gênero do tipo "Mistério"
+Esta consulta usa a função COUNT() para contar a quantidade de filmes para cada ano. A consulta também agrupa os resultados por Ano e ordena por QuantidadeAno em ordem decrescente.
 
-![Exercicio 11](Imagens/11.png)
+```sql
+SELECT Ano, COUNT(Nome) AS QuantidadeAno
+FROM Filmes
+GROUP BY Ano
+ORDER BY COUNT(Nome) DESC
+```
 
-## 12 - Buscar o nome do filme e os atores, trazendo o PrimeiroNome, UltimoNome e seu Papel
+### 8. Buscar os Atores do gênero masculino, retornando o PrimeiroNome, UltimoNome:
 
-![Exercicio 12](Imagens/12.png)
+Esta consulta busca por atores com valor na coluna Genero igual a "M". O resultado será uma lista com o PrimeiroNome e UltimoNome dos atores do gênero masculino.
+
+```sql
+SELECT PrimeiroNome, UltimoNome
+FROM Atores
+WHERE Genero = 'M'
+```
+
+### 9. Buscar os Atores do gênero feminino, retornando o PrimeiroNome, UltimoNome, e ordenando pelo PrimeiroNome:
+
+Esta consulta busca por atores com valor na coluna Genero igual a "F". O resultado será uma lista com o PrimeiroNome e UltimoNome dos atores do gênero feminino, ordenada por PrimeiroNome.
+
+```sql
+SELECT PrimeiroNome, UltimoNome
+FROM Atores
+WHERE Genero = 'F'
+ORDER BY PrimeiroNome
+```
+
+### 10. Buscar o nome do filme e o gênero:
+
+Esta consulta usa um INNER JOIN entre as tabelas Filmes, FilmesGenero e Generos. O resultado será uma lista com o nome do filme e o gênero.
+
+```sql
+SELECT
+    f.Nome AS NomeFilme,
+    g.Genero AS NomeGenero
+FROM Filmes AS f
+INNER JOIN FilmesGenero AS fg ON f.Id = fg.IdFilme
+INNER JOIN Generos AS g ON fg.IdGenero = g.Id
+```
+
+### 11. Buscar o nome do filme e o gênero do tipo "Mistério":
+
+Esta consulta usa um INNER JOIN entre as tabelas Filmes, FilmesGenero e Generos e usa o operador LIKE para buscar por filmes com gênero "Mistério". O resultado será uma lista com o nome do filme e o gênero "Mistério".
+
+```sql
+SELECT
+    f.Nome AS NomeFilme,
+    g.Genero AS NomeGenero
+FROM Filmes AS f
+INNER JOIN FilmesGenero AS fg ON f.Id = fg.IdFilme
+INNER JOIN Generos AS g ON fg.IdGenero = g.Id
+WHERE Genero LIKE '%Mistério%'
+```
+
+### 12. Buscar o nome do filme e os atores, trazendo o PrimeiroNome, UltimoNome e seu Papel:
+
+Esta consulta usa um INNER JOIN entre as tabelas Filmes, ElencoFilme e Atores. O resultado será uma lista com o nome do filme, o PrimeiroNome, UltimoNome e o Papel de cada ator que participa do filme.
+
+```sql
+SELECT
+    f.Nome AS NomeFilme,
+    a.PrimeiroNome,
+    a.UltimoNome,
+    ef.Papel
+FROM Filmes AS f
+INNER JOIN ElencoFilme AS ef ON f.Id = ef.IdFilme
+INNER JOIN Atores AS a ON ef.IdAtor = a.Id
+```
+
+
